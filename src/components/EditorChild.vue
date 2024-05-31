@@ -42,10 +42,6 @@ export default defineComponent ({
     const { modelValue } = toRefs(props);
     const content = ref(modelValue.value);
     // console.log(props, modelValue)
-    // const editorSettings = reactive({
-    //   selector: 'textarea',
-    //   // license_key: 'gpl'
-    // })
 
     const init = reactive({
       // language: 'zh_TW',

@@ -24,7 +24,6 @@ export default defineComponent ({
     modelValue: {
       type: String,
       required: true,
-      default: ''
     },
     plugins: {
       type: [String, Array],
@@ -56,21 +55,20 @@ export default defineComponent ({
     });
 
     watch(content, (newValue) => {
-      console.log('watch1', newValue)
+      console.log('watch1:', newValue)
       emit('update:modelValue', newValue);
     });
     
     watch(modelValue, (newValue) => {
+      // console.log('watch3:', newValue)
       content.value = newValue;
     });
-    const updateValue = (value) => {
-      emit('update:modelValue', value);
-    };
+
     onMounted(() => {
       tinymce.init({});
     })
     return {
-      content, init, updateValue
+      content, init
     }
   }
 });

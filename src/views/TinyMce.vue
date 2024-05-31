@@ -4,8 +4,12 @@ import EditorChild from "@/components/EditorChild"
 export default defineComponent ({
   name: "TinyMce",
   components: {EditorChild},
-  setup(props, { emit }) {
-    const value = ref('<p>Content of the editor.</p>');
+  setup() {
+    const value = ref('<h1>test</h1>');
+
+    watch(value, (newValue) => {
+      // console.log('parent2::',newValue);
+    });
     return {
       value
     }

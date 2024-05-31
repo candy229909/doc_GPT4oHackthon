@@ -1,11 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
-// import HomeView from "@/views/HomeView.vue";
 import TinyMce from "@/views/TinyMce.vue";
 
 const routes = [
   {
     path: "/",
-    name: "home",
+    name: "TinyMce",
     component: TinyMce,
   },
 ];

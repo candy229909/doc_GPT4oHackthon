@@ -3,13 +3,19 @@ import {ref, reactive, onMounted, toRefs, watch, defineComponent, defineProps, d
 import EditorChild from "@/components/EditorChild"
 export default defineComponent ({
   name: "TinyMce",
-  components: {EditorChild}
+  components: {EditorChild},
+  setup(props, { emit }) {
+    const value = ref('<p>Content of the editor.</p>');
+    return {
+      value
+    }
+  }
 });
 
 </script>
 
 <template>
-  <div class="">
-    <EditorChild />
+  <div>
+    <EditorChild v-model="value" />
   </div>
 </template>

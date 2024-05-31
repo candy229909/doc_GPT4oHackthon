@@ -1,5 +1,5 @@
 <script>
-import {ref, reactive, onMounted, toRefs, watch, defineComponent, defineProps, defineEmits } from "vue";
+import {ref, reactive, onMounted, toRefs, watch, defineComponent } from "vue";
 
 import Editor from "@tinymce/tinymce-vue"; 
 import tinymce from 'tinymce/tinymce.js'
@@ -77,14 +77,15 @@ export default defineComponent ({
 </script>
 <template>
 <div class="q-pa-lg">
-  Editor
+  <h5>
+    Editor
+  </h5>
 
   <!-- {{ content }} -->
 
   <Editor
       v-model="content"
       :init="init"
-      
     ></Editor>
 </div>
 </template>

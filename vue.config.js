@@ -17,15 +17,15 @@ module.exports = defineConfig({
     open: true, //啟動時是否自動打開瀏覽器
     // 開發環境代理配置
     proxy: {
-      '/api': {
+      [process.env.VUE_APP_IMAGE_API]: {
         //代理別人
-        target: 'http://localhost:5000', //被代理
+        target: process.env.VUE_APP_SERVICE_URL, //被代理
         ws: true, 
 
         changeOrigin: true, //啟動代理
-        // pathRewrite: {
-        //   ["^" + process.env.VUE_APP_BASE_API]: "",
-        // },
+        pathRewrite: {
+          ["^" + process.env.VUE_APP_BASE_API]: "",
+        },
       },
     },
   },

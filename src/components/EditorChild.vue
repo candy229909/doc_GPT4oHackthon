@@ -22,7 +22,7 @@ import 'tinymce/plugins/table';
 import 'tinymce/plugins/quickbars';
 
 import imgAssistant from "@/assets/icon/assistant.svg";
-
+import {editIcon} from "@/shared/svg";
 
 export default defineComponent ({
   name: "EditorChild",
@@ -42,13 +42,12 @@ export default defineComponent ({
     toolbar: {
     type: [String, Array],
     default:
-      ' bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify|bullist numlist |outdent indent blockquote | undo redo | axupimgs | removeformat | table | emoticons',
+      ' customButton | bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify|bullist numlist |outdent indent blockquote | undo redo | axupimgs | removeformat | table | emoticons',
   },
   },
   emits: ['update:modelValue'],
   components: {Editor},
   setup(props, { emit }) {
-    const baseApi = ref(process.env.VUE_APP_BASE_API)
     const { modelValue, editorId } = toRefs(props);
     const content = ref(modelValue.value);
     const tinymceId = ref(editorId.value);
@@ -73,11 +72,19 @@ export default defineComponent ({
       setup: (editor) => {
         editor.on('keydown', (event) => {
           if (event.key === 'Enter') {
-            // console.log('Key pressed:', event.key);
             getNewDataFromGPT(content.value);
             // emit('onEnterPress', content.value);
           }
-        })
+        });
+
+        editor.ui.registry.addButton('customButton', {
+          icon: 'custom-icon',
+          onAction: () => {
+            console.log('onAction');
+          }
+        });
+
+        editor.ui.registry.addIcon('custom-icon', editIcon);
       }
     });
     // https://vue-lessons-api.vercel.app/courses/list
@@ -123,7 +130,7 @@ export default defineComponent ({
     })
 
     return {
-      content, init, tinymceId, data, gptDialog, openDialog, imgAssistant: imgAssistantRef, inputText, baseApi
+      content, init, tinymceId, data, gptDialog, openDialog, imgAssistant: imgAssistantRef, inputText
     }
   }
 });
@@ -133,8 +140,8 @@ export default defineComponent ({
 
   <!-- {{ content }} -->
 
-    {{ data }}
-    >>{{baseApi}}
+    <!-- {{ data }} -->
+
 
   <Editor
       :id="tinymceId"

@@ -137,7 +137,7 @@ export default defineComponent ({
       :init="init"
       ref="editor"
     ></Editor>
-    <q-btn label="open" color="primary" @click="openDialog" />
+
     <!-- 跳窗 -->
     <q-dialog v-model="gptDialog">
       <q-card class="q-pa-md" style="max-width: 60vw;">

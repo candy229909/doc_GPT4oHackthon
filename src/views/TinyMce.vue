@@ -63,16 +63,16 @@ export default defineComponent ({
             
         ]
       },
-      {
-        "value": "change layout",
-        "label": "Change layout",
-        "children": [
-              {"value": "papers", "label": "papers"},
-              { "value": "press release", "label": "press release" },
-              { "value": "blog", "label": "blog" }
+      // {
+      //   "value": "change layout",
+      //   "label": "Change layout",
+      //   "children": [
+      //         {"value": "papers", "label": "papers"},
+      //         { "value": "press release", "label": "press release" },
+      //         { "value": "blog", "label": "blog" }
             
-        ]
-      }
+      //   ]
+      // }
     ])
 
     // watch

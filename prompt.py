@@ -1,6 +1,6 @@
 def apply_modifications(request):
-    work = request["work"]
-    article = request["article"]
+    work = request["word"]
+    article = request["content"]
 
     for task in work:
         modification = modifications.get(task, "")

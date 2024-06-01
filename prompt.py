@@ -1,14 +1,13 @@
-def traverse_and_modify_articles(structure, modifications, article="", level=0):
-    for item in structure:
-        # 获取当前节点的修改内容
-        modification = modifications.get(item["value"], "")
-        # 修改文章
-        modified_article = f"Task\n{article}\n{modification}"
-        print(f"Modified article at {item['label']}:\n{modified_article.strip()}\n")
-        
-        # 递归处理子节点
-        if "children" in item:
-            traverse_and_modify_articles(item["children"], modifications, modified_article, level + 1)
+def apply_modifications(request):
+    work = request["work"]
+    article = request["article"]
+
+    for task in work:
+        modification = modifications.get(task, "")
+        if modification:
+            article = f"{article}\n\n{modification}"
+
+    return article
 
 # 定义你的结构
 structure = [
@@ -100,6 +99,3 @@ modifications = {
     "translate to Simplified Chinese": "Simplified Chinese is used in mainland China.",
     "translate to Japanese": "Japanese translation requires understanding of kanji, hiragana, and katakana."
 }
-
-# 遍历并修改文章
-traverse_and_modify_articles(structure, modifications)

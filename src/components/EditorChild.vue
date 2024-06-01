@@ -46,8 +46,8 @@ export default defineComponent ({
       // language: 'zh_TW',
       height: 500,
       menubar: true,
-      content_css: false,
-      skin: false,
+      content_css: false, //若true 會出現引入路徑錯誤
+      skin: false, //若true 會出現引入路徑錯誤
       plugins: props.plugins,
       toolbar: props.toolbar,
       quickbars_insert_toolbar: false,

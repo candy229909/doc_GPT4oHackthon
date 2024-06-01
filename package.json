@@ -11,6 +11,7 @@
     "@quasar/extras": "^1.0.0",
     "@tinymce/tinymce-vue": "^4.0.2",
     "axios": "^1.7.2",
+    "element-plus": "^2.7.4",
     "quasar": "^2.0.0",
     "tinymce": "^5.8.0",
     "vue": "^3.2.13",

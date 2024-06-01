@@ -74,10 +74,7 @@ export default defineComponent ({
 });
 </script>
 <template>
-<div class="q-pa-lg">
-  <h5>
-    Editor
-  </h5>
+<div>
 
   <!-- {{ content }} -->
 

@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import requests
+from prompt import apply_modifications
 
 app = Flask(__name__)
 
@@ -36,12 +37,11 @@ def generate():
 
 @app.route('/api/enter', methods=['POST'])
 def enter():
-    prompt = request.json.get('prompt')
-    if not prompt:
-        return jsonify({'error': 'No prompt provided'}), 400
+    data = request.get_json()
+    modified_article = apply_modifications(data)
 
     # 从OpenAI获取响应
-    openai_response = get_openai_response(prompt)
+    openai_response = get_openai_response(modified_article)
     openai_text = openai_response['choices'][0]['text']
 
     return jsonify({'openai_response': openai_text})

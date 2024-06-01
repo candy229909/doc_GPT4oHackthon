@@ -2,6 +2,8 @@
 import axios from 'axios';
 import {ref, reactive, onMounted, onBeforeUnmount, toRefs, watch, defineComponent } from "vue";
 
+import {generateData} from "@/api/editor";
+
 // ==== tinymce ====
 
 import Editor from "@tinymce/tinymce-vue";
@@ -46,6 +48,7 @@ export default defineComponent ({
   emits: ['update:modelValue'],
   components: {Editor},
   setup(props, { emit }) {
+    const baseApi = ref(process.env.VUE_APP_BASE_API)
     const { modelValue, editorId } = toRefs(props);
     const content = ref(modelValue.value);
     const tinymceId = ref(editorId.value);
@@ -80,22 +83,23 @@ export default defineComponent ({
     // https://vue-lessons-api.vercel.app/courses/list
     const getNewDataFromGPT = async (content) => {
       const url = `https://vue-lessons-api.vercel.app/courses/list`
-      const res = await axios.get(url)
-      console.log(res, 'res::');
-      testData.data = res.data
-      // try {
-      //   const response = await axios.post(url, {
-      //     data: {
-      //       content,
-      //     },
-      //   });
+      // const res = await axios.get(url)
+      // console.log(res, 'res::');
+      // testData.data = res.data
 
-      //   const responseData = response.data;
-      //   console.log('API response:', responseData);
+      try {
+        const data = {
+          content: content
+        }
+        console.log(data, 'data::');
+        const res = await generateData(data);
+        console.log(res, 'res::');
+        // const responseData = response.data;
+        // console.log('API response:', responseData);
 
-      // } catch (error) {
-      //   console.error('API error:', error);
-      // }
+      } catch (error) {
+        console.error('API error:', error);
+      }
     };
 
     const openDialog = () => {
@@ -119,7 +123,7 @@ export default defineComponent ({
     })
 
     return {
-      content, init, tinymceId, data, gptDialog, openDialog, imgAssistant: imgAssistantRef, inputText
+      content, init, tinymceId, data, gptDialog, openDialog, imgAssistant: imgAssistantRef, inputText, baseApi
     }
   }
 });
@@ -130,6 +134,7 @@ export default defineComponent ({
   <!-- {{ content }} -->
 
     {{ data }}
+    >>{{baseApi}}
 
   <Editor
       :id="tinymceId"

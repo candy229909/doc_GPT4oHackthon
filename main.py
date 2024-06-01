@@ -14,16 +14,40 @@ def get_openai_response(prompt):
     }
     data = {
         'prompt': prompt,
-        'max_tokens': 100,  # 根据需要调整
+        'max_tokens': 1500,  # 根据需要调整
         'n': 1,
         'stop': None,
-        'temperature': 0.5
+        'temperature': 0.2
     }
     response = requests.post(url, headers=headers, json=data)
     return response.json()
 
-@app.route('/generate', methods=['POST'])
+@app.route('/api/generate', methods=['POST'])
 def generate():
+    prompt = request.json.get('prompt')
+    if not prompt:
+        return jsonify({'error': 'No prompt provided'}), 400
+
+    # 从OpenAI获取响应
+    openai_response = get_openai_response(prompt)
+    openai_text = openai_response['choices'][0]['text']
+
+    return jsonify({'openai_response': openai_text})
+
+@app.route('/api/enter', methods=['POST'])
+def enter():
+    prompt = request.json.get('prompt')
+    if not prompt:
+        return jsonify({'error': 'No prompt provided'}), 400
+
+    # 从OpenAI获取响应
+    openai_response = get_openai_response(prompt)
+    openai_text = openai_response['choices'][0]['text']
+
+    return jsonify({'openai_response': openai_text})
+
+@app.route('/api/get', methods=['POST'])
+def api_get():
     prompt = request.json.get('prompt')
     if not prompt:
         return jsonify({'error': 'No prompt provided'}), 400

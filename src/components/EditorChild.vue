@@ -19,6 +19,8 @@ import 'tinymce/plugins/emoticons/js/emojis.js';
 import 'tinymce/plugins/table';
 import 'tinymce/plugins/quickbars';
 
+import imgAssistant from "@/assets/icon/assistant.svg";
+
 
 export default defineComponent ({
   name: "EditorChild",
@@ -47,6 +49,10 @@ export default defineComponent ({
     const { modelValue, editorId } = toRefs(props);
     const content = ref(modelValue.value);
     const tinymceId = ref(editorId.value);
+
+    const gptDialog = ref(false)
+    const imgAssistantRef = ref(imgAssistant)
+    const inputText = ref('')
 
     let testData = reactive({data: null})
     let {data} = toRefs(testData)
@@ -92,6 +98,10 @@ export default defineComponent ({
       // }
     };
 
+    const openDialog = () => {
+      gptDialog.value = true
+    }
+
 
 
     watch(content, (newValue) => {
@@ -109,7 +119,7 @@ export default defineComponent ({
     })
 
     return {
-      content, init, tinymceId, data
+      content, init, tinymceId, data, gptDialog, openDialog, imgAssistant: imgAssistantRef, inputText
     }
   }
 });
@@ -127,6 +137,32 @@ export default defineComponent ({
       :init="init"
       ref="editor"
     ></Editor>
+    <q-btn label="open" color="primary" @click="openDialog" />
+    <!-- 跳窗 -->
+    <q-dialog v-model="gptDialog">
+      <q-card class="q-pa-md" style="max-width: 60vw;">
+
+        <div class="flex items-center">
+          <img class="q-mr-md" :src="imgAssistant" />
+          <div class="fz-larger text-weight-bold q-my-md">AI Assistant</div>
+        </div>
+        <div class="">
+          <q-input
+            outlined
+            :input-style="{ width: '100vw', height: '50VH' }"
+            v-model="inputText"
+            type="textarea"
+            maxlength="999"
+          />
+        </div>
+        <div class="flex q-py-md">
+          <q-btn class="q-mr-md" label="replace" color="primary" />
+          <q-btn class="q-mr-md" flat label="insert below" color="dark" />
+          <q-btn class="q-mr-md" flat label="try again" color="dark" />
+          <q-btn class="q-mr-md" flat label="stop" color="grey" />
+        </div>
+      </q-card>
+    </q-dialog>
 </div>
 </template>
 <style lang="scss" scoped>

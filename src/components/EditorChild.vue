@@ -1,5 +1,5 @@
 <script>
-import {ref, reactive, onMounted, toRefs, watch, defineComponent } from "vue";
+import {ref, reactive, onMounted, onBeforeUnmount, toRefs, watch, defineComponent } from "vue";
 
 import Editor from "@tinymce/tinymce-vue"; 
 import tinymce from 'tinymce/tinymce.js'
@@ -21,6 +21,10 @@ import 'tinymce/plugins/quickbars';
 export default defineComponent ({
   name: "EditorChild",
   props: {
+    editorId: {
+      type: String,
+      required: true,
+    },
     modelValue: {
       type: String,
       required: true,
@@ -38,9 +42,10 @@ export default defineComponent ({
   emits: ['update:modelValue'],
   components: {Editor},
   setup(props, { emit }) {
-    const { modelValue } = toRefs(props);
+    const { modelValue, editorId } = toRefs(props);
     const content = ref(modelValue.value);
-    // console.log(props, modelValue)
+    const tinymceId = ref(editorId.value);
+    // console.log('::', editorId)
 
     const init = reactive({
       // language: 'zh_TW',
@@ -52,7 +57,16 @@ export default defineComponent ({
       toolbar: props.toolbar,
       quickbars_insert_toolbar: false,
       branding: false,
+      setup: (editor) => {
+        editor.on('keydown', (event) => {
+          if (event.key === 'Enter') {
+            console.log('Key pressed:', event.key);
+            // emit('onEnterPress', content.value);
+          }
+        })
+      }
     });
+
 
     watch(content, (newValue) => {
       console.log('watch1:', newValue)
@@ -65,10 +79,11 @@ export default defineComponent ({
     });
 
     onMounted(() => {
-      tinymce.init({});
+      tinymce.init({})
     })
+
     return {
-      content, init
+      content, init, tinymceId
     }
   }
 });
@@ -79,8 +94,10 @@ export default defineComponent ({
   <!-- {{ content }} -->
 
   <Editor
+      :id="tinymceId"
       v-model="content"
       :init="init"
+      ref="editor"
     ></Editor>
 </div>
 </template>

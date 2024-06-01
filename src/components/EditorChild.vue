@@ -1,9 +1,11 @@
 <script>
+import axios from 'axios';
 import {ref, reactive, onMounted, onBeforeUnmount, toRefs, watch, defineComponent } from "vue";
 
-import Editor from "@tinymce/tinymce-vue"; 
-import tinymce from 'tinymce/tinymce.js'
+// ==== tinymce ====
 
+import Editor from "@tinymce/tinymce-vue";
+import tinymce from 'tinymce/tinymce.js'
 
 import 'tinymce/skins/ui/oxide/skin.css'
 import 'tinymce/themes/silver'
@@ -45,7 +47,9 @@ export default defineComponent ({
     const { modelValue, editorId } = toRefs(props);
     const content = ref(modelValue.value);
     const tinymceId = ref(editorId.value);
-    // console.log('::', editorId)
+
+    let testData = reactive({data: null})
+    let {data} = toRefs(testData)
 
     const init = reactive({
       // language: 'zh_TW',
@@ -60,12 +64,34 @@ export default defineComponent ({
       setup: (editor) => {
         editor.on('keydown', (event) => {
           if (event.key === 'Enter') {
-            console.log('Key pressed:', event.key);
+            // console.log('Key pressed:', event.key);
+            getNewDataFromGPT(content.value);
             // emit('onEnterPress', content.value);
           }
         })
       }
     });
+    // https://vue-lessons-api.vercel.app/courses/list
+    const getNewDataFromGPT = async (content) => {
+      const url = `https://vue-lessons-api.vercel.app/courses/list`
+      const res = await axios.get(url)
+      console.log(res, 'res::');
+      testData.data = res.data
+      // try {
+      //   const response = await axios.post(url, {
+      //     data: {
+      //       content,
+      //     },
+      //   });
+
+      //   const responseData = response.data;
+      //   console.log('API response:', responseData);
+
+      // } catch (error) {
+      //   console.error('API error:', error);
+      // }
+    };
+
 
 
     watch(content, (newValue) => {
@@ -83,7 +109,7 @@ export default defineComponent ({
     })
 
     return {
-      content, init, tinymceId
+      content, init, tinymceId, data
     }
   }
 });
@@ -92,6 +118,8 @@ export default defineComponent ({
 <div>
 
   <!-- {{ content }} -->
+
+    {{ data }}
 
   <Editor
       :id="tinymceId"

@@ -35,7 +35,7 @@ def get_openai_response(prompt):
     return response.json()
 
 @app.route('/api/generate', methods=['POST'])
- """
+"""
     Correct sentence postback based on selected work.
     Expected JSON format: { "work": ["structure", "child"], "content": "article" }
     Returns JSON: { "openai_response": "modified_article" }
@@ -51,11 +51,11 @@ def generate():
     return jsonify({'openai_response': openai_text})
 
 @app.route('/api/enter', methods=['POST'])
-'''
+"""
 revise format after enter with choose format
 Expected JSON format: { format:format_name, sentence: upto 1500 words (with above sentence is better)
 Returns string
-'''
+"""
 
 def enter():
     data = request.get_json()

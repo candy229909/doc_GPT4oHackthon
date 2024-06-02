@@ -22,6 +22,7 @@ import 'tinymce/plugins/table';
 import 'tinymce/plugins/quickbars';
 import 'tinymce/plugins/image'; // 新增 image 插件
 import 'tinymce/plugins/imagetools';
+import 'tinymce/plugins/paste';
 
 import imgAssistant from "@/assets/icon/assistant.svg";
 import {editIcon} from "@/shared/svg";
@@ -39,7 +40,7 @@ export default defineComponent ({
     },
     plugins: {
       type: [String, Array],
-      default: 'quickbars emoticons image table',
+      default: 'quickbars emoticons image table paste',
     },
     toolbar: {
     type: [String, Array],
@@ -71,6 +72,11 @@ export default defineComponent ({
       toolbar: props.toolbar,
       quickbars_insert_toolbar: false,
       branding: false,
+
+      // paste_data_images: true, // 启用粘贴图片功能
+      // automatic_uploads: true, // 自动上传
+      // images_upload_url: '', // 设置上传URL
+      // file_picker_types: 'image',
       setup: (editor) => {
         editor.on('keydown', (event) => {
           if (event.key === 'Enter') {
@@ -78,6 +84,41 @@ export default defineComponent ({
             // emit('onEnterPress', content.value);
           }
         });
+
+        // 处理粘贴和拖放
+        // editor.on('drop', (e) => {
+        //   const items = (e.dataTransfer && e.dataTransfer.files) || [];
+        //   if (items.length) {
+        //     e.preventDefault();
+        //     const file = items[0];
+        //     const reader = new FileReader();
+        //     reader.onload = (event) => {
+        //       const base64 = event.target.result;
+        //       // 将图片插入到编辑器
+        //       editor.insertContent(`<img src="${base64}" />`);
+        //     };
+        //     reader.readAsDataURL(file);
+        //   }
+        // });
+
+
+        // editor.on('paste', (e) => {
+        //   const clipboardData = e.clipboardData || window.clipboardData;
+        //   const items = clipboardData.items || [];
+        //   for (const item of items) {
+        //     if (item.type.indexOf('image') !== -1) {
+        //       const file = item.getAsFile();
+        //       const reader = new FileReader();
+        //       reader.onload = (event) => {
+        //         const base64 = event.target.result;
+        //         // 将图片插入到编辑器
+        //         editor.insertContent(`<img src="${base64}" />`);
+        //       };
+        //       reader.readAsDataURL(file);
+        //       e.preventDefault();
+        //     }
+        //   }
+        // });
 
         editor.ui.registry.addButton('customButton', {
           icon: 'custom-icon',

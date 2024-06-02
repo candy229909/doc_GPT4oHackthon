@@ -55,9 +55,10 @@ export default defineComponent ({
     const content = ref(modelValue.value);
     const tinymceId = ref(editorId.value);
 
-    const gptDialog = ref(false)
+    const gptDialog = ref(true)
     const imgAssistantRef = ref(imgAssistant)
-    const inputText = ref('')
+    const resInputText = ref('')
+    const askInputText = ref('')
     let fileModel = reactive({fileData: []})
     let {fileData} = toRefs(fileModel)
     const toggleVal = ref(false)
@@ -207,7 +208,7 @@ export default defineComponent ({
     })
 
     return {
-      content, init, tinymceId, data, gptDialog, openDialog, imgAssistant: imgAssistantRef, inputText, fileData, toggleVal
+      content, init, tinymceId, data, gptDialog, openDialog, imgAssistant: imgAssistantRef, resInputText, askInputText, fileData, toggleVal
     }
   }
 });
@@ -244,11 +245,11 @@ export default defineComponent ({
           <img class="q-mr-md" :src="imgAssistant" />
           <div class="fz-larger text-weight-bold q-my-md">AI Assistant</div>
         </div>
-        <div class="">
+        <div>
           <q-input
             outlined
             :input-style="{ width: '100vw', height: '50VH' }"
-            v-model="inputText"
+            v-model="resInputText"
             type="textarea"
             maxlength="999"
           />
@@ -258,6 +259,16 @@ export default defineComponent ({
           <q-btn class="q-mr-md" flat label="insert below" color="dark" />
           <q-btn class="q-mr-md" flat label="try again" color="dark" />
           <q-btn class="q-mr-md" flat label="stop" color="grey" />
+        </div>
+        <div class="flex">
+          <q-input
+              style="flex: 1 0 auto"
+              class="q-mr-md"
+              outlined
+              v-model="askInputText"
+              type="test"
+            />
+            <q-btn label="send" color="primary" />
         </div>
       </q-card>
     </q-dialog>

@@ -8,8 +8,9 @@ WORKDIR /app
 COPY . /app
 
 # 安装所需的包
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir Flask request uuid
+RUN pip install --no-cache-dir Flask
 
 # 暴露容器的端口
 EXPOSE 5000

@@ -3,7 +3,7 @@ import axios from 'axios';
 import {ref, reactive, onMounted, onBeforeUnmount, toRefs, watch, defineComponent } from "vue";
 
 import {generateData, enter2Data, getData} from "@/api/editor";
-
+import { ElCascader, ElDialog } from 'element-plus';
 // ==== tinymce ====
 
 import Editor from "@tinymce/tinymce-vue";
@@ -25,7 +25,7 @@ import 'tinymce/plugins/imagetools';
 import 'tinymce/plugins/paste';
 
 import imgAssistant from "@/assets/icon/assistant.svg";
-import {editIcon, RobotIcon} from "@/shared/svg";
+import {editIcon, RobotIcon2} from "@/shared/svg";
 
 export default defineComponent ({
   name: "EditorChild",
@@ -49,13 +49,87 @@ export default defineComponent ({
   },
   },
   emits: ['update:modelValue'],
-  components: {Editor},
+  components: {Editor, ElCascader, ElDialog },
   setup(props, { emit }) {
+
+    let selectedOptions = reactive({selectedOptionData: []});
+    let {selectedOptionData} = toRefs(selectedOptions)
+    const optionsData = ref([
+      {
+        "value": "edit or Review",
+        "label": "Edit or review",
+        "children": [
+              {"value": "improve writing", "label": "improve writing"},
+              { "value": "make shorter", "label": "make shorter" },
+              { "value": "simplify language", "label": "simplify language" }
+            
+        ]
+      },
+      {
+        "value": "generate form selection",
+        "label": "Generate form selection",
+        "children": [
+              {"value": "summarize", "label": "summarize"},
+              { "value": "continue", "label": "continue" }
+        ]
+      },
+      {
+        "value": "change tone",
+        "label": "Change tone",
+        "children": [
+              {"value": "profesional", "label": "profesional"},
+              { "value": "casual", "label": "casual" },
+              { "value": "direct", "label": "direct" },
+              {"value": "confident", "label": "confident"},
+              {"value": "friendly", "label": "friendly"}
+            
+        ]
+      },
+      {
+        "value": "change style",
+        "label": "Change style",
+        "children": [
+              {"value": "busuness", "label": "busuness"},
+              { "value": "legal", "label": "legal" },
+              { "value": "journalism", "label": "journalism" }
+            
+        ]
+      },
+      {
+        "value": "translate",
+        "label": "Translate",
+        "children": [
+            
+              { "value": "translate to English", "label": "translate to English" },
+              {"value": "translate to Tradionnal Chinese", "label": "translate to Tradionnal Chinese"},
+              { "value": "translate to Simplified Chinese", "label": "translate to Simplified Chinese" },
+              { "value": "translate to Japanese", "label": "translate to Japanese" }
+            
+            
+        ]
+      },
+      // {
+      //   "value": "change layout",
+      //   "label": "Change layout",
+      //   "children": [
+      //         {"value": "papers", "label": "papers"},
+      //         { "value": "press release", "label": "press release" },
+      //         { "value": "blog", "label": "blog" }
+            
+      //   ]
+      // }
+    ])
+
+
     const { modelValue, editorId } = toRefs(props);
     const content = ref(modelValue.value);
     const tinymceId = ref(editorId.value);
 
-    const gptDialog = ref(true)
+    const gptDialog = ref(false)
+    const gptAskDialog = ref(false)
+    const autoLayoutDialog = ref(false)
+    const cascaderDialog = ref(false)
+
     const imgAssistantRef = ref(imgAssistant)
     const resInputText = ref('')
     const askInputText = ref('')
@@ -161,7 +235,7 @@ export default defineComponent ({
         });
 
         editor.ui.registry.addIcon('edit-icon', editIcon);
-        editor.ui.registry.addIcon('robot-icon', RobotIcon);
+        editor.ui.registry.addIcon('robot-icon', RobotIcon2);
       }
     });
     // https://vue-lessons-api.vercel.app/courses/list
@@ -191,6 +265,24 @@ export default defineComponent ({
       gptDialog.value = true
     }
 
+    const handleChange = async (value) => {
+      const arrData = [value[0], value[1]]
+      const data = {
+        work: arrData,
+        content: content.value
+      }
+      console.log(data, 'data::');
+      try {
+        const res = await generateData(data);
+        console.log(res, 'res::');
+        // const responseData = response.data;
+        // console.log('API response:', responseData);
+
+      } catch (error) {
+        console.error('API error:', error);
+      }
+    };
+
 
 
     watch(content, (newValue) => {
@@ -208,7 +300,7 @@ export default defineComponent ({
     })
 
     return {
-      content, init, tinymceId, data, gptDialog, openDialog, imgAssistant: imgAssistantRef, resInputText, askInputText, fileData, toggleVal
+      content, init, tinymceId, data, gptDialog, gptAskDialog, autoLayoutDialog, cascaderDialog, openDialog, imgAssistant: imgAssistantRef, resInputText, askInputText, fileData, toggleVal, selectedOptionData, optionsData, handleChange
     }
   }
 });
@@ -222,14 +314,6 @@ export default defineComponent ({
   <div class="flex">
     <q-toggle v-model="toggleVal" label="Activate AI" />
   </div>
-  <div class="flex q-mb-md">
-    <q-file outlined v-model="fileData" dense class="q-mr-md">
-      <template v-slot:prepend>
-        <q-icon name="attach_file" />
-      </template>
-    </q-file>
-    <q-btn label="send" color="primary" />
-  </div>
   <Editor
       :id="tinymceId"
       v-model="content"
@@ -237,7 +321,59 @@ export default defineComponent ({
       ref="editor"
     ></Editor>
 
-    <!-- 跳窗 -->
+    <!-- 跳窗 -Cascader -->
+    <el-dialog v-model="cascaderDialog" style="width: 70vw; height: 60vh">
+    <p>这是一个基本的弹窗。</p>
+      <ElCascader
+          v-model="selectedOptionData"
+          :options="optionsData"
+          @change="handleChange"
+          placeholder="Please select"
+        ></ElCascader>
+    </el-dialog>
+
+    <!-- 跳窗 -AI Auto Layout -->
+    <q-dialog v-model="autoLayoutDialog">
+      <q-card class="q-pa-md" style="width: 80vw;">
+        <div class="flex items-center">
+          <img class="q-mr-md" :src="imgAssistant" />
+          <div class="fz-larger text-weight-bold q-my-md">Auto Layout</div>
+        </div>
+        <p>
+          Can keep writing without changing any style
+        </p>
+        <div class="flex q-mb-md">
+          <q-file outlined v-model="fileData" dense class="q-mr-md" style="flex: 1 0 auto">
+            <template v-slot:prepend>
+              <q-icon name="attach_file" />
+            </template>
+          </q-file>
+          <q-btn label="send" color="primary" />
+        </div>
+        </q-card>
+    </q-dialog>
+
+    <!-- 跳窗 -AI 詢問 -->
+    <q-dialog v-model="gptAskDialog">
+      <q-card class="q-pa-md" style="width: 80vw;">
+        <div class="flex items-center">
+          <img class="q-mr-md" :src="imgAssistant" />
+          <div class="fz-larger text-weight-bold q-my-md">AI Assistant</div>
+        </div>
+        <div class="flex">
+          <q-input
+              style="flex: 1 0 auto"
+              class="q-mr-md"
+              outlined
+              v-model="askInputText"
+              type="test"
+            />
+            <q-btn label="send" color="primary" />
+        </div>
+        </q-card>
+    </q-dialog>
+
+    <!-- 跳窗 -AI 回傳 + 詢問 -->
     <q-dialog v-model="gptDialog">
       <q-card class="q-pa-md" style="max-width: 60vw;">
 

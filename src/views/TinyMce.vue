@@ -114,12 +114,12 @@ export default defineComponent ({
   <div class="q-pt-lg q-px-lg">
     <div class="q-mb-xl">
       <!-- {{ selectedOptionData }} -->
-      <ElCascader
+      <!-- <ElCascader
         v-model="selectedOptionData"
         :options="optionsData"
         @change="handleChange"
         placeholder="Please select"
-      ></ElCascader>
+      ></ElCascader> -->
     </div>
     <EditorChild v-model="editorValue" :editorId="'gpt_editor'" />
   </div>

@@ -35,28 +35,28 @@ def get_openai_response(prompt):
     return response.json()
 
 @app.route('/api/generate', methods=['POST'])
-"""
+def generate():
+    """
     Correct sentence postback based on selected work.
     Expected JSON format: { "work": ["structure", "child"], "content": "article" }
     Returns JSON: { "openai_response": "modified_article" }
-"""
-def generate():
+    """
     data = request.get_json()
     modified_article = apply_modifications(data)
 
     # 从OpenAI获取响应
-    openai_response = get_openai_response(prompt)
+    openai_response = get_openai_response(modified_article)
     openai_text = openai_response['choices'][0]['text']
 
     return jsonify({'openai_response': openai_text})
 
 @app.route('/api/enter', methods=['POST'])
-"""
-revise format after enter with choose format
-Expected JSON format: { format:format_name, sentence: upto 1500 words (with above sentence is better)
-Returns string
-"""
 def enter():
+    """
+    Revise format after enter with choose format.
+    Expected JSON format: { format:format_name, sentence: upto 1500 words (with above sentence is better) }
+    Returns JSON: { "openai_response": "modified_article" }
+    """
     data = request.get_json()
     modified_article = apply_modifications(data)
 
@@ -67,14 +67,13 @@ def enter():
     return jsonify({'openai_response': openai_text})
 
 @app.route('/api/get', methods=['POST'])
-"""
-get format name
-Expected : upload file, format name
-return string(max 1500)
-"""
 def api_get():
-
-    ## 讀取檔案
+    """
+    Get format name.
+    Expected: upload file, format name
+    Returns JSON: { "openai_response": "modified_article" }
+    """
+    # 读取文件
     if 'file' not in request.files:
         return jsonify({"error": "No file part in the request"}), 400
 
@@ -91,18 +90,17 @@ def api_get():
         # 读取文件内容
         with open(file_path, 'r', encoding='utf-8') as f:
             file_content = f.read()
-            
-    prompt = request.json.get('prompt')
+
+    # 获取prompt
+    prompt = request.form.get('prompt')
     if not prompt:
         return jsonify({'error': 'No prompt provided'}), 400
 
     # 从OpenAI获取响应
-    openai_response = get_openai_response(prompt)
+    openai_response = get_openai_response(file_content + "\n\n" + prompt)
     openai_text = openai_response['choices'][0]['text']
 
     return jsonify({'openai_response': openai_text})
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)

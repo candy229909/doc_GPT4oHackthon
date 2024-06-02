@@ -20,6 +20,8 @@ import 'tinymce/plugins/emoticons';
 import 'tinymce/plugins/emoticons/js/emojis.js';
 import 'tinymce/plugins/table';
 import 'tinymce/plugins/quickbars';
+import 'tinymce/plugins/image'; // 新增 image 插件
+import 'tinymce/plugins/imagetools';
 
 import imgAssistant from "@/assets/icon/assistant.svg";
 import {editIcon} from "@/shared/svg";
@@ -37,12 +39,12 @@ export default defineComponent ({
     },
     plugins: {
       type: [String, Array],
-      default: 'quickbars emoticons table',
+      default: 'quickbars emoticons image table',
     },
     toolbar: {
     type: [String, Array],
     default:
-      ' customButton | bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify|bullist numlist |outdent indent blockquote | undo redo | axupimgs | removeformat | table | emoticons',
+      ' customButton | bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify|bullist numlist |outdent indent blockquote | undo redo | axupimgs | removeformat | table | insertfile  | image |emoticons',
   },
   },
   emits: ['update:modelValue'],

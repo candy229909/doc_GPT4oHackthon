@@ -224,13 +224,14 @@ export default defineComponent ({
         editor.ui.registry.addButton('editButton', {
           icon: 'edit-icon',
           onAction: () => {
-            console.log('onAction');
+            cascaderDialog.value = true
           }
         });
         editor.ui.registry.addButton('robotButton', {
           icon: 'robot-icon',
           onAction: () => {
-            console.log('onAction');
+            // console.log('onAction');
+            gptAskDialog.value = true
           }
         });
 
@@ -323,7 +324,6 @@ export default defineComponent ({
 
     <!-- 跳窗 -Cascader -->
     <el-dialog v-model="cascaderDialog" style="width: 70vw; height: 60vh">
-    <p>这是一个基本的弹窗。</p>
       <ElCascader
           v-model="selectedOptionData"
           :options="optionsData"
@@ -367,6 +367,7 @@ export default defineComponent ({
               outlined
               v-model="askInputText"
               type="test"
+              placeholder="Ask AI to improve generated text"
             />
             <q-btn label="send" color="primary" />
         </div>

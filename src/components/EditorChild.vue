@@ -40,7 +40,7 @@ export default defineComponent ({
     },
     plugins: {
       type: [String, Array],
-      default: 'quickbars emoticons image table paste',
+      default: 'quickbars emoticons image imagetools table paste',
     },
     toolbar: {
     type: [String, Array],
@@ -75,10 +75,33 @@ export default defineComponent ({
       quickbars_insert_toolbar: false,
       branding: false,
 
-      // paste_data_images: true, // 启用粘贴图片功能
-      // automatic_uploads: true, // 自动上传
-      // images_upload_url: '', // 设置上传URL
-      // file_picker_types: 'image',
+      paste_data_images: true, // 启用粘贴图片功能
+      automatic_uploads: true, // 自动上传
+      // images_upload_handler: async (blobInfo, success, failure) => {
+      //   try {
+      //     const formData = new FormData();
+      //     formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+      //     const response = await fetch('http://localhost:3000/upload', {
+      //       method: 'POST',
+      //       body: formData,
+      //     });
+
+      //     if (!response.ok) {
+      //       throw new Error(`HTTP error! status: ${response.status}`);
+      //     }
+
+      //     const json = await response.json();
+
+      //     if (!json || typeof json.location !== 'string') {
+      //       throw new Error(`Invalid JSON: ${JSON.stringify(json)}`);
+      //     }
+
+      //     success(json.location);
+      //   } catch (error) {
+      //     failure(`Image upload failed: ${error.message}`);
+      //   }
+      // },
       setup: (editor) => {
         editor.on('keydown', (event) => {
           if (event.key === 'Enter') {
@@ -88,20 +111,20 @@ export default defineComponent ({
         });
 
         // 处理粘贴和拖放
-        // editor.on('drop', (e) => {
-        //   const items = (e.dataTransfer && e.dataTransfer.files) || [];
-        //   if (items.length) {
-        //     e.preventDefault();
-        //     const file = items[0];
-        //     const reader = new FileReader();
-        //     reader.onload = (event) => {
-        //       const base64 = event.target.result;
-        //       // 将图片插入到编辑器
-        //       editor.insertContent(`<img src="${base64}" />`);
-        //     };
-        //     reader.readAsDataURL(file);
-        //   }
-        // });
+        editor.on('drop', (e) => {
+          const items = (e.dataTransfer && e.dataTransfer.files) || [];
+          if (items.length) {
+            e.preventDefault();
+            const file = items[0];
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const base64 = event.target.result;
+              // 将图片插入到编辑器
+              editor.insertContent(`<img src="${base64}" />`);
+            };
+            reader.readAsDataURL(file);
+          }
+        });
 
 
         // editor.on('paste', (e) => {

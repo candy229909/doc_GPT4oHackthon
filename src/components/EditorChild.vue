@@ -58,6 +58,8 @@ export default defineComponent ({
     const gptDialog = ref(false)
     const imgAssistantRef = ref(imgAssistant)
     const inputText = ref('')
+    let fileModel = reactive({fileData: []})
+    let {fileData} = toRefs(fileModel)
 
     let testData = reactive({data: null})
     let {data} = toRefs(testData)
@@ -174,7 +176,7 @@ export default defineComponent ({
     })
 
     return {
-      content, init, tinymceId, data, gptDialog, openDialog, imgAssistant: imgAssistantRef, inputText
+      content, init, tinymceId, data, gptDialog, openDialog, imgAssistant: imgAssistantRef, inputText, fileData
     }
   }
 });
@@ -185,8 +187,14 @@ export default defineComponent ({
   <!-- {{ content }} -->
 
     <!-- {{ data }} -->
-
-
+  <div class="flex q-mb-md">
+    <q-file outlined v-model="fileData" dense class="q-mr-md">
+      <template v-slot:prepend>
+        <q-icon name="attach_file" />
+      </template>
+    </q-file>
+    <q-btn label="send" color="primary" />
+  </div>
   <Editor
       :id="tinymceId"
       v-model="content"

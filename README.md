@@ -1,5 +1,18 @@
 # bks_project
 
+# install Docker
+
+# build image
+```
+docker build -t open . --no-cache
+```
+
+# build container
+```
+docker run open
+```
+
+
 ## Project setup
 ```
 npm install

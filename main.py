@@ -37,6 +37,10 @@ def get_openai_response(prompt):
     response = requests.post(url, headers=headers, json=data)
     return response.json()
 
+@app.route('/api', methods=['POST'])
+def api():
+    return 'api running'
+
 @app.route('/api/generate', methods=['POST'])
 def generate():
     """

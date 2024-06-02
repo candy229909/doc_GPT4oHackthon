@@ -67,11 +67,11 @@ def enter():
     return jsonify({'openai_response': openai_text})
 
 @app.route('/api/get', methods=['POST'])
-'''
+"""
 get format name
 Expected : upload file, format name
 return string(max 1500)
-'''
+"""
 def api_get():
 
     ## 讀取檔案

@@ -56,7 +56,6 @@ revise format after enter with choose format
 Expected JSON format: { format:format_name, sentence: upto 1500 words (with above sentence is better)
 Returns string
 """
-
 def enter():
     data = request.get_json()
     modified_article = apply_modifications(data)
@@ -73,7 +72,6 @@ get format name
 Expected : upload file, format name
 return string(max 1500)
 '''
-
 def api_get():
 
     ## 讀取檔案

@@ -3,12 +3,14 @@ import {ref, reactive, onMounted, toRefs, watch, defineComponent, defineProps, d
 import EditorChild from "@/components/EditorChild"
 
 import { ElCascader } from 'element-plus';
+import {generateData, getData} from "@/api/editor";
 export default defineComponent ({
   name: "TinyMce",
   components: {EditorChild, ElCascader},
   setup() {
-    const value = ref('<h1>test</h1>');
-    const selectedOptions = ref([]);
+    const editorValue = ref('<h1>test</h1>');
+    let selectedOptions = reactive({selectedOptionData: []});
+    let {selectedOptionData} = toRefs(selectedOptions)
     const optionsData = ref([
       {
         "value": "edit or Review",
@@ -76,42 +78,32 @@ export default defineComponent ({
     ])
 
     // watch
-    watch(value, (newValue) => {
-      // console.log('parent2::',newValue);
+    watch(editorValue, (newValue) => {
+      // console.log('watch2 parent ::',newValue);
     });
     
     // methods
-    const handleChange = (value) => {
-      // console.log('Selected options:', value[0], value[1], value[2]);
-    };
+    const handleChange = async (value) => {
+      const arrData = [value[0], value[1]]
+      const data = {
+        work: arrData,
+        content: editorValue.value
+      }
+      console.log(data, 'data::');
+      try {
+        const res = await generateData(data);
+        console.log(res, 'res::');
+        // const responseData = response.data;
+        // console.log('API response:', responseData);
 
-
-    const dataFilter = (node, query) => {
-      // console.log('::', node.label);
-      const label = node.label.toLowerCase();
-      // console.log('label', label);
-      return label.includes(query.toLowerCase());
+      } catch (error) {
+        console.error('API error:', error);
+      }
     };
-
-    // Filter options recursively
-    const filterOptions = (options, query) => {
-      return options.filter((node) => {
-        const labelMatch = dataFilter(node, query);
-        const childMatch = node.children && filterOptions(node.children, query).length > 0;
-        return labelMatch || childMatch;
-      });
-    };
-    
-    
-    // computed
-    const filteredOptions = computed(() => {
-      const searchQuery = ''; // Get the search query from the input field
-      const filteredNodes = filterOptions(options.value, searchQuery);
-      return filteredNodes;
-    });
+ 
 
     return {
-      value, selectedOptions, handleChange, dataFilter, filteredOptions, optionsData
+      editorValue, selectedOptionData, handleChange, optionsData
     }
   }
 });
@@ -121,14 +113,14 @@ export default defineComponent ({
 <template>
   <div class="q-pt-lg q-px-lg">
     <div class="q-mb-xl">
-      <!-- {{ selectedOptions }} -->
+      <!-- {{ selectedOptionData }} -->
       <ElCascader
-        v-model="selectedOptions"
+        v-model="selectedOptionData"
         :options="optionsData"
         @change="handleChange"
         placeholder="Please select"
       ></ElCascader>
     </div>
-    <EditorChild v-model="value" :editorId="'gpt_editor'" />
+    <EditorChild v-model="editorValue" :editorId="'gpt_editor'" />
   </div>
 </template>

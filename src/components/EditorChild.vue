@@ -2,7 +2,7 @@
 import axios from 'axios';
 import {ref, reactive, onMounted, onBeforeUnmount, toRefs, watch, defineComponent } from "vue";
 
-import {generateData} from "@/api/editor";
+import {generateData, enter2Data, getData} from "@/api/editor";
 
 // ==== tinymce ====
 
@@ -139,10 +139,11 @@ export default defineComponent ({
 
       try {
         const data = {
-          content: content
+          format: 'blog',
+          sentence: content
         }
         console.log(data, 'data::');
-        const res = await generateData(data);
+        const res = await enter2Data(data);
         console.log(res, 'res::');
         // const responseData = response.data;
         // console.log('API response:', responseData);
@@ -159,7 +160,7 @@ export default defineComponent ({
 
 
     watch(content, (newValue) => {
-      console.log('watch1:', newValue)
+      // console.log('watch1:', newValue)
       emit('update:modelValue', newValue);
     });
     

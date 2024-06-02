@@ -19,7 +19,10 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(MODIFIED_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MODIFIED_FOLDER'] = MODIFIED_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  
+# 設定文件上傳的保存路徑和允許的文件類型
+UPLOAD_FOLDER = 'uploads/'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'docx'}
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB 上傳文件大小限制
 
 def get_openai_response(prompt):
     url = 'https://api.openai.com/v1/engines/davinci-codex/completions'
@@ -36,6 +39,10 @@ def get_openai_response(prompt):
     }
     response = requests.post(url, headers=headers, json=data)
     return response.json()
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/api', methods=['POST'])
 def api():
@@ -123,4 +130,7 @@ def enter():
     return jsonify({"openai_response": modified_article})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    if not os.path.exists(UPLOAD_FOLDER):
+        os.makedirs(UPLOAD_FOLDER)
+        
+    app.run(debug=True, threaded=True)

@@ -2,6 +2,9 @@ from flask import Flask, request, jsonify, send_file
 import os
 import requests
 import uuid
+from werkzeug.utils import secure_filename
+import threading
+
 from prompt import apply_modifications
 
 app = Flask(__name__)

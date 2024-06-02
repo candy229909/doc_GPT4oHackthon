@@ -25,7 +25,7 @@ import 'tinymce/plugins/imagetools';
 import 'tinymce/plugins/paste';
 
 import imgAssistant from "@/assets/icon/assistant.svg";
-import {editIcon} from "@/shared/svg";
+import {editIcon, RobotIcon} from "@/shared/svg";
 
 export default defineComponent ({
   name: "EditorChild",
@@ -45,7 +45,7 @@ export default defineComponent ({
     toolbar: {
     type: [String, Array],
     default:
-      ' customButton | bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify|bullist numlist |outdent indent blockquote | undo redo | axupimgs | removeformat | table | insertfile  | image |emoticons',
+      ' editButton | robotButton | bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify|bullist numlist |outdent indent blockquote | undo redo | axupimgs | removeformat | table | insertfile  | image |emoticons',
   },
   },
   emits: ['update:modelValue'],
@@ -60,6 +60,7 @@ export default defineComponent ({
     const inputText = ref('')
     let fileModel = reactive({fileData: []})
     let {fileData} = toRefs(fileModel)
+    const toggleVal = ref(false)
 
     let testData = reactive({data: null})
     let {data} = toRefs(testData)
@@ -104,7 +105,7 @@ export default defineComponent ({
       // },
       setup: (editor) => {
         editor.on('keydown', (event) => {
-          if (event.key === 'Enter') {
+          if (toggleVal.value == true && event.key === 'Enter') {
             getNewDataFromGPT(content.value);
             // emit('onEnterPress', content.value);
           }
@@ -145,14 +146,21 @@ export default defineComponent ({
         //   }
         // });
 
-        editor.ui.registry.addButton('customButton', {
-          icon: 'custom-icon',
+        editor.ui.registry.addButton('editButton', {
+          icon: 'edit-icon',
+          onAction: () => {
+            console.log('onAction');
+          }
+        });
+        editor.ui.registry.addButton('robotButton', {
+          icon: 'robot-icon',
           onAction: () => {
             console.log('onAction');
           }
         });
 
-        editor.ui.registry.addIcon('custom-icon', editIcon);
+        editor.ui.registry.addIcon('edit-icon', editIcon);
+        editor.ui.registry.addIcon('robot-icon', RobotIcon);
       }
     });
     // https://vue-lessons-api.vercel.app/courses/list
@@ -199,7 +207,7 @@ export default defineComponent ({
     })
 
     return {
-      content, init, tinymceId, data, gptDialog, openDialog, imgAssistant: imgAssistantRef, inputText, fileData
+      content, init, tinymceId, data, gptDialog, openDialog, imgAssistant: imgAssistantRef, inputText, fileData, toggleVal
     }
   }
 });
@@ -210,6 +218,9 @@ export default defineComponent ({
   <!-- {{ content }} -->
 
     <!-- {{ data }} -->
+  <div class="flex">
+    <q-toggle v-model="toggleVal" label="Activate AI" />
+  </div>
   <div class="flex q-mb-md">
     <q-file outlined v-model="fileData" dense class="q-mr-md">
       <template v-slot:prepend>

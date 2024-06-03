@@ -1,0 +1,75 @@
+version: '3'
+services:
+  flask_1:
+    build:
+      context: app
+      dockerfile: Dockerfile
+    container_name: flask_1
+    image: python:3.9-stretch
+    restart: unless-stopped
+    environment:
+      APP_ENV: "prod"
+      APP_DEBUG: "false"
+      APP_PORT: 5000
+    volumes:
+      - appdata:/var/www
+    networks:
+      - frontend
+
+  webserver_1:
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    image: nginx:latest
+    container_name: webserver_1
+    restart: unless-stopped
+    environment:
+      APP_ENV: "prod"
+      APP_NAME: "webserver_1"
+      APP_DEBUG: "true"
+      SERVICE_NAME: "webserver_1"
+    ports:
+      - "8181:8181"
+    volumes:
+      - nginxdata:/var/log/nginx
+    depends_on:
+      - flask_1
+    networks:
+      - frontend
+
+  appvue_1:
+    build:
+      context: front
+      dockerfile: Dockerfile
+      args:
+        VUE_APP_BASE_API: '/api'
+        VUE_APP_SERVICE_URL: 'http://localhost:5000/api'
+    container_name: appvue_1
+    image: nginx:stable-alpine
+    restart: unless-stopped
+    environment:
+      APP_VUE_ROOT_API: "http://localhost:8181"
+    ports:
+      - "80:80"
+    volumes:
+      - appvue_1data:/data/app
+    depends_on:
+      - flask_1
+    networks: 
+      - frontend
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+volumes:
+  mongodata:
+    driver: local
+  appdata:
+    driver: local
+  nginxdata:
+    driver: local
+  appvue_1data:
+    driver: local

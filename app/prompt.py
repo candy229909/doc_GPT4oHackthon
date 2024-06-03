@@ -1,5 +1,5 @@
 def apply_modifications(request):
-    work = request["word"]
+    work = request["work"]
     article = request["content"]
 
     for task in work:
@@ -9,7 +9,7 @@ def apply_modifications(request):
 
     return article
 
-# 定义你的结构
+# Define your structure
 structure = [
     {
         "value": "edit or review",
@@ -32,7 +32,7 @@ structure = [
         "value": "change tone",
         "label": "Change tone",
         "children": [
-            {"value": "profesional", "label": "profesional"},
+            {"value": "professional", "label": "professional"},
             {"value": "casual", "label": "casual"},
             {"value": "direct", "label": "direct"},
             {"value": "confident", "label": "confident"},
@@ -43,7 +43,7 @@ structure = [
         "value": "change style",
         "label": "Change style",
         "children": [
-            {"value": "busuness", "label": "busuness"},
+            {"value": "business", "label": "business"},
             {"value": "legal", "label": "legal"},
             {"value": "journalism", "label": "journalism"}
         ]
@@ -53,14 +53,14 @@ structure = [
         "label": "Translate",
         "children": [
             {"value": "translate to English", "label": "translate to English"},
-            {"value": "translate to Tradionnal Chinese", "label": "translate to Tradionnal Chinese"},
+            {"value": "translate to Traditional Chinese", "label": "translate to Traditional Chinese"},
             {"value": "translate to Simplified Chinese", "label": "translate to Simplified Chinese"},
             {"value": "translate to Japanese", "label": "translate to Japanese"}
         ]
     }
 ]
 
-# 定义每个节点的文章段落
+# Define modifications for each node
 modifications = {
     "edit or review": (
         "Goal: To receive detailed feedback and edits on the provided article, focusing on improving clarity, coherence, grammar, and overall quality.\n\n"
@@ -79,23 +79,23 @@ modifications = {
     ),
     "improve writing": "Focus on improving overall readability and engagement of the text.",
     "make shorter": "Summarize each major point in a brief, clear sentence.",
-    "simplify language": "Make direct edits within the text using track changes or a similar feature if possible.",
+    "simplify language": "Use simpler words and phrases to make the text more accessible.",
     "generate form selection": "Generating a form selection involves several steps.",
     "summarize": "First, summarize the key points of the text.",
     "continue": "Then, continue with additional relevant information.",
     "change tone": "Changing the tone of the text can alter its impact.",
-    "profesional": "For a professional tone, use formal language and avoid slang.",
+    "professional": "For a professional tone, use formal language and avoid slang.",
     "casual": "A casual tone can include contractions and colloquial expressions.",
     "direct": "A direct tone is straightforward and to the point.",
     "confident": "A confident tone conveys certainty and assurance.",
     "friendly": "A friendly tone is warm and approachable.",
     "change style": "Changing the style of the text can make it suitable for different audiences.",
-    "busuness": "A business style is formal and focused on professional matters.",
+    "business": "A business style is formal and focused on professional matters.",
     "legal": "A legal style includes precise terminology and thorough explanations.",
     "journalism": "A journalistic style is clear, concise, and aimed at informing the public.",
     "translate": "Translation involves converting text from one language to another.",
     "translate to English": "Translating to English can make the text accessible to a global audience.",
-    "translate to Tradionnal Chinese": "Traditional Chinese is used in Taiwan and Hong Kong.",
+    "translate to Traditional Chinese": "Traditional Chinese is used in Taiwan and Hong Kong.",
     "translate to Simplified Chinese": "Simplified Chinese is used in mainland China.",
     "translate to Japanese": "Japanese translation requires understanding of kanji, hiragana, and katakana."
 }

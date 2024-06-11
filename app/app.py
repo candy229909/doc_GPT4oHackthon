@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify
 import os
 import requests
-
-from werkzeug.urls import url_quot
 from prompt import apply_modifications
 app = Flask(__name__)
 

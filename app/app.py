@@ -7,7 +7,7 @@ from prompt import apply_modifications
 app = Flask(__name__)
 
 # Set up the OpenAI API key
-OPENAI_API_KEY = 'your_openai_api_key'
+OPENAI_API_KEY = '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'
 
 # Set up directories for uploaded and modified files
 UPLOAD_FOLDER = 'uploads'
@@ -21,7 +21,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB upload file size li
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'docx'}
 
 def get_openai_response(prompt):
-    url = 'https://api.openai.com/v1/engines/davinci-codex/completions'
+    baseURL: 'https://integrate.api.nvidia.com/v1',
     headers = {
         'Authorization': f'Bearer {OPENAI_API_KEY}',
         'Content-Type': 'application/json'
